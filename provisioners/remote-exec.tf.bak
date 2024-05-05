@@ -1,0 +1,51 @@
+provider "aws" {
+  region = "eu-central-1"
+}
+
+resource "aws_security_group" "allow_ssh_http" {
+  name        = "allow_ssh_http"
+  description = "Allow SSH and internet"
+
+  tags = {
+    Name = "allow_ssh"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
+  security_group_id = aws_security_group.allow_ssh_http.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 22
+  ip_protocol       = "tcp"
+  to_port           = 22
+}
+
+resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
+  security_group_id = aws_security_group.allow_ssh_http.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
+resource "aws_instance" "myec2" {
+    ami = "ami-0f673487d7e5f89ca"
+  instance_type = "t2.micro"
+  key_name = "terraform-key-pair"
+  vpc_security_group_ids = [aws_security_group.allow_ssh_http.id]
+
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("./terraform-key-pair.pem") 
+    host = self.public_ip
+  }
+
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.myec2.public_ip} >> remote_server_ip.txt"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+        "sudo yum -y install nginx",
+        "sudo systemctl start nginx"
+    ]
+  }
+  }

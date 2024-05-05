@@ -1,0 +1,10 @@
+provider "aws" {
+    region = "eu-west-3"
+}
+
+data "aws_instance" "filter_by_tags" {
+    filter {
+      name = "tag:Type"
+      values = ["proxy"]
+    }
+}

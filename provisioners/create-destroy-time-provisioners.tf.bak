@@ -1,0 +1,13 @@
+resource "aws_iam_user" "lb" {
+  name = "loadbalancer"
+
+// Default when=create
+provisioner "local-exec" {
+  command = "echo creation time provisioner is starting"
+}
+
+provisioner "local-exec" {
+  when = destroy
+  command = "echo destroy time provisioner is starting"
+}
+}

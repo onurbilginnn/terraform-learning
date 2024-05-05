@@ -1,0 +1,11 @@
+resource "aws_iam_user" "lb" {
+  name = "loadbalancer"
+
+provisioner "local-exec" {
+  command = "echo first local-exec provisioner is starting"
+}
+
+provisioner "local-exec" {
+  command = "echo second local-exec provisioner is starting"
+}
+}

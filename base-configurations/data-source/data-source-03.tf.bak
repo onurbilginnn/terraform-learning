@@ -1,0 +1,5 @@
+provider "aws" {
+    region = "eu-west-3"
+}
+
+data "aws_instances" "fetch_info_all_instances" {}

@@ -1,0 +1,8 @@
+provider "aws" {
+  region = "eu-central-1"
+}
+
+resource "aws_iam_user" "iam" {
+  for_each = toset(["user-1", "user-2", "user-3"])
+  name = each.key
+}

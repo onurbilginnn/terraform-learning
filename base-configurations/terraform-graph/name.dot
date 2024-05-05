@@ -1,0 +1,9 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "aws_eip.lb" [label="aws_eip.lb"];
+  "aws_instance.myec2" [label="aws_instance.myec2"];
+  "aws_security_group.allow_tls" [label="aws_security_group.allow_tls"];
+  "aws_eip.lb" -> "aws_instance.myec2";
+  "aws_security_group.allow_tls" -> "aws_eip.lb";
+}
